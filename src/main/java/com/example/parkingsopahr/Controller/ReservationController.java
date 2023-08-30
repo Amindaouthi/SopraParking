@@ -3,7 +3,7 @@ package com.example.parkingsopahr.Controller;
 import com.example.parkingsopahr.entities.reservation;
 import com.example.parkingsopahr.services.PlaceparkingImp;
 import com.example.parkingsopahr.services.ReservationImp;
-import com.example.parkingsopahr.services.UserImp;
+import com.example.parkingsopahr.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +21,7 @@ public class ReservationController {
     @Autowired
     ReservationImp reservationImp;
     @Autowired
-    UserImp userImp ;
+    UserService userImp ;
     @Autowired
     PlaceparkingImp placeparkingImp;
 
@@ -35,11 +35,11 @@ public class ReservationController {
         return reservationImp.getReservationById(idReservation);
     }
 
-    //@PostMapping("addReservation/{iduser}/{idpl}")
-   // public reservation addreservation(@RequestBody reservation reservation , @PathVariable ("iduser")Long iduser ,
-                                //      @PathVariable ("idpl")Long idpl) {
-       // return reservationImp.addreservation(reservation , iduser , idpl);
-   // }
+    @PostMapping("addReservation/{iduser}/{idpl}")
+    public reservation addreservation(@RequestBody reservation reservation , @PathVariable ("userEmail")String userEmail ,
+                                  @PathVariable ("idpl")Long idpl) {
+        return reservationImp.addreservation(reservation , userEmail , idpl);
+   }
     @PutMapping("updateReservation/{idReservation}")
     public ResponseEntity<reservation> updatereservation(@RequestBody reservation r, @PathVariable("idReservation") Long idReservation) {
         reservation updatedEntity = reservationImp.updatereservation(idReservation, r);
@@ -55,7 +55,7 @@ public class ReservationController {
     public ResponseEntity<reservation> affecterReservation(@RequestBody reservation ReservationDto ) {
         try {
         reservation reservation  = reservationImp.affecterReservation(
-                ReservationDto.getUser().getIduser(),
+                ReservationDto.getUser().getUserEmail(),
                 ReservationDto.getPlaceparking().getIdpl(),
                 ReservationDto.getDateDebut(),
                 ReservationDto.getDateFin()
@@ -63,6 +63,27 @@ public class ReservationController {
             return new ResponseEntity<>(reservation, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+    @PostMapping("/create-with-priority")
+    public ResponseEntity<reservation> createReservationWithPriority(
+            @RequestBody Map<String, Object> requestBody) {
+        try {
+            String  userEmail = (requestBody.get("userEmail").toString());
+            Long idpl = Long.parseLong(requestBody.get("idpl").toString());
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            Date dateDebut = dateFormat.parse(requestBody.get("dateDebut").toString());
+            Date dateFin = dateFormat.parse(requestBody.get("dateFin").toString());
+            reservation reservation = reservationImp.createReservationWithPriority(
+                    userEmail,
+                    idpl,
+                    dateDebut,
+                    dateFin
+            );
+
+            return ResponseEntity.ok(reservation);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
         }
     }
 

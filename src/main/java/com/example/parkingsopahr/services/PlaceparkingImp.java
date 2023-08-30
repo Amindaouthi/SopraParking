@@ -22,7 +22,6 @@ public class PlaceparkingImp implements Iplaceparking {
     ParkingRepository parkingRepository ;
 
 
-
     @Override
     public placeparking updatePlaceParking(Long idpl, placeparking pl ) {
         placeparking existinPlaceParking = placeparkingRepository.findById(idpl).orElseThrow(() ->new RuntimeException("Parking not found" + idpl));
@@ -36,14 +35,10 @@ public class PlaceparkingImp implements Iplaceparking {
         return placeparkingRepository.findById(idpl);
     }
 
-    @Override
-    public List<placeparking> getAllPlaceParking() {
-        return placeparkingRepository.findAll();
-    }
-
+    
     @Override
     public List<placeparking> getAllPlaceParkings() {
-        return null;
+        return  placeparkingRepository.findAll();
     }
 
 
@@ -65,6 +60,9 @@ public class PlaceparkingImp implements Iplaceparking {
     public void deletePlaceParking(Long idpl) {
 
     }
+    //public List<placeparking> searchAvailablePlaceParking(String location) {
+   //     return placeparkingRepository.findByLocationAndOccupee(location, false);
+   // }
 
    // public parking assignPlaceParkingToParking(Long idpa, String type, boolean occupee, String numero) {
     //    parking parking = parkingRepository.findById(idpa)

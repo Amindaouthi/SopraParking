@@ -11,10 +11,10 @@ public interface Iplaceparking {
     Optional<placeparking> getPlaceParkingById(Long idpl);
 
 
-    List<placeparking> getAllPlaceParking();
 
     List<placeparking> getAllPlaceParkings();
 
+  //  List<placeparking> searchAvailablePlaceParking(String Location);
 
 
     placeparking updatePlaceParking(Long idpl, placeparking pl);

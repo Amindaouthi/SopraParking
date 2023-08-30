@@ -1,35 +1,33 @@
 package com.example.parkingsopahr.entities;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
-
-@AllArgsConstructor
-@NoArgsConstructor
+@Entity
 @Getter
 @Setter
-@Entity
-@Table(name = "User")
-public class user {
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+public class user implements Serializable {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "iduser", nullable = false)
-    private Long iduser;
+    private String userEmail;
+    private String userFirstName;
+    private String userLastName;
+    private String userPassword;
 
-    private String nom;
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "role_id")
+    private Role role;
 
-    private String email;
 
-    private String motDePasse;
-
-    @Enumerated
-    roleuser roleuser;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    //
+    @OneToMany(mappedBy = "user")
     private List<reservation> reservations;
 }

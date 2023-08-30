@@ -1,5 +1,5 @@
 package com.example.parkingsopahr.entities;
 
 public enum roleuser {
-    Manager, TeamLeader, Consultant, SoftwareEngineer
+    manager, teamleader, consultant, softwareengineer
 }

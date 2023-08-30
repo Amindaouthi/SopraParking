@@ -25,7 +25,6 @@ public class placeparking {
 
     private boolean occupee;
 
-    private String type;
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "parking_id")

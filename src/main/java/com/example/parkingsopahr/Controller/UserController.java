@@ -1,50 +1,56 @@
 package com.example.parkingsopahr.Controller;
 
+import com.example.parkingsopahr.entities.ApiResponse;
 import com.example.parkingsopahr.entities.user;
-import com.example.parkingsopahr.entities.reservation;
-import com.example.parkingsopahr.services.ReservationImp;
-import com.example.parkingsopahr.services.UserImp;
+import com.example.parkingsopahr.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
+@Component
 @RestController
-@RequestMapping("user")
 public class UserController {
 
     @Autowired
-   UserImp userImp ;
-    @Autowired
-    ReservationImp reservationImp ;
+    private UserService userService;
 
-    @GetMapping("GetAllUsers")
-    public List<user> getAllUsers() {
-        return userImp.getAllUsers();
-    }
-
-    @GetMapping("GetUser/{iduser}")
-    public user getUserById(@PathVariable Long iduser) {
-        return userImp.getUserById(iduser).orElse(null);
+    @PostMapping({"/RoleAndUser"}) //////////////////////USELESS////////////////////////
+    public void initRoleAndUser() {
+        userService.initRolesAndUser();
     }
 
 
-    @PostMapping("/addUser")
-    public user adduser(@RequestBody user user ) {
-        return userImp.adduser(user);
+    @PostMapping({"/registerNewUser"})
+    public ResponseEntity<user> registrerNewUser(@RequestBody user user) {
+        Integer test = userService.registrerNewUser(user);
+        ApiResponse response = new ApiResponse();
+        if(test == 1){
+            response.setMessage("user registred successffuly");
+            return new ResponseEntity(response , HttpStatus.OK);
+        }
+        else{
+            response.setMessage("cannot register user");
+            return new ResponseEntity(response, HttpStatus.CONFLICT);
+        }
+
     }
 
-    @PutMapping("updateUser/{iduser}")
-    public ResponseEntity<user> updateUser(@RequestBody user u, @PathVariable("iduser") Long iduser) {
-        user updatedEntity = userImp.updateUser(iduser,u);
-        return new ResponseEntity<>(updatedEntity, HttpStatus.OK);
+    @GetMapping({"/forAdmin"})
+    @PreAuthorize("hasRole('Admin')")
+    public String forAdmin() {
+        return "this is for Admin";
     }
 
 
-    @DeleteMapping("DeleteUser/{iduser}")
-    public void deleteUser(@PathVariable Long iduser) {
-        userImp.deleteUser(iduser);
+    @GetMapping({"/forManager"})
+    @PreAuthorize("hasRole('Manager')")
+    public String forUser() {
+        return "this is for Manager";
+
     }
+
 }
+

@@ -46,4 +46,11 @@ public class PlaceParkingController {
         placeparkingImp.deletePlaceParking(idpl);
     }
 
-    }
+
+    //@GetMapping("/searchAvailablePlaceParking")
+    //public List<placeparking> searchAvailablePlaceParking(@RequestParam String Placeparking) {
+      //  return placeparkingImp.searchAvailablePlaceParking(Placeparking);
+   // }
+
+
+}
